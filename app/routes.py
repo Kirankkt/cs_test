@@ -15,3 +15,15 @@ def add_item():
     item = {'id': len(_items) + 1, 'name': data.get('name', '')}
     _items.append(item)
     return jsonify(item), 201
+
+@bp.route('/items/<int:id>', methods=['PUT'])
+def update_item(id):
+    data = request.get_json() or {}
+    # Search for the item
+    for item in _items:
+        if item['id'] == id:
+            # Update its name and return it
+            item['name'] = data.get('name', item['name'])
+            return jsonify(item), 200
+    # If not found, return the error JSON
+    return jsonify({'error': 'Not found'}), 404
